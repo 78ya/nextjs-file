@@ -7,13 +7,12 @@ on:
 permissions:
   contents: write
 
-env:
-  TARGET_REPO: "zhangyu-JK/nextjs-file"
-
 jobs:
   sync:
-    if: ${{ env.TARGET_REPO != '' }}
+    if: ${{ vars.SYNC_TARGET_REPO != '' }}
     runs-on: ubuntu-latest
+    env:
+      TARGET_REPO: "zhangyu-JK/nextjs-file"
     steps:
       - uses: actions/checkout@v4
 
