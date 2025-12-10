@@ -1,0 +1,30 @@
+name: Sync to Other Repos
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+env:
+  TARGET_REPO: "zhangyu-JK/nextjs-file"
+
+jobs:
+  sync:
+    if: ${{ env.TARGET_REPO != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push to mirror
+        run: |
+          git config user.email "bop-lp@qq.com"
+          git config user.name "78ya"
+          git remote remove mirror 2>/dev/null || true
+          git remote add mirror https://github.com/${{ env.TARGET_REPO }}.git
+          git push mirror HEAD:main
+        env:
+          # 若目标仓库需要 PAT，请改用 secrets.GH_SYNC_TOKEN 并在 URL 中内嵌凭据或使用 GIT_ASKPASS
+          # 示例（更安全）：把上面 remote 改成 https://x-access-token:${{ secrets.GH_SYNC_TOKEN }}@github.com/${{ env.TARGET_REPO }}.git
+          GIT_ASKPASS: /bin/true
