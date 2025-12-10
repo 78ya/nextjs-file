@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   sync:
-    if: ${{ vars.SYNC_TARGET_REPO != '' }}
+    if: ${{ env.TARGET_REPO != '' }}
     runs-on: ubuntu-latest
     env:
       TARGET_REPO: "zhangyu-JK/nextjs-file"
