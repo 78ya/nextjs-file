@@ -52,7 +52,14 @@ async function deleteToken(id: string) {
 
 async function fetchToken(id: string): Promise<StoredToken | null> {
   assertEnv();
-  return edgeConfigGet<StoredToken>(`token:${id}`);
+  const token = await edgeConfigGet<StoredToken>(`token:${id}`);
+  if (!token) return null;
+  if (token.expiresAt && new Date(token.expiresAt).getTime() <= Date.now()) {
+    // 过期即清理并视为不存在
+    await deleteToken(id);
+    return null;
+  }
+  return token;
 }
 
 function hashToken(token: string) {
